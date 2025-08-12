@@ -77,15 +77,55 @@ type ExternalAccount struct {
 	Name string `json:"name"`
 }
 
+type TokenOwner struct {
+	Workspace bool  `json:"workspace,omitempty"`
+	User      *User `json:"user,omitempty"`
+}
+
 type TokenCreateResponse struct {
 	AccessToken          string `json:"access_token"`
+	RefreshToken         string `json:"refresh_token,omitempty"`
 	BotId                string `json:"bot_id"`
 	DuplicatedTemplateId string `json:"duplicated_template_id,omitempty"`
 
 	// Owner can be { "workspace": true } OR a User object.
 	// Ref: https://developers.notion.com/docs/authorization#step-4-notion-responds-with-an-access_token-and-some-additional-information
-	Owner         interface{} `json:"owner,omitempty"`
-	WorkspaceIcon string      `json:"workspace_icon"`
-	WorkspaceId   string      `json:"workspace_id"`
-	WorkspaceName string      `json:"workspace_name"`
+	Owner TokenOwner `json:"owner,omitempty"`
+
+	WorkspaceIcon string `json:"workspace_icon"`
+	WorkspaceId   string `json:"workspace_id"`
+	WorkspaceName string `json:"workspace_name"`
+}
+
+// Refreshes an access token, generating a new access token and new refresh token.
+//
+// See https://developers.notion.com/reference/refresh-a-token
+func (cc *AuthenticationClient) RefreshToken(ctx context.Context, request *TokenRefreshRequest) (*TokenCreateResponse, error) {
+	res, err := cc.apiClient.requestImpl(ctx, http.MethodPost, "oauth/token", nil, request, true, decodeTokenCreateError)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if errClose := res.Body.Close(); errClose != nil {
+			log.Println("failed to close body, should never happen")
+		}
+	}()
+
+	var response TokenCreateResponse
+	err = json.NewDecoder(res.Body).Decode(&response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
+
+// TokenRefreshRequest represents the request body for AuthenticationClient.RefreshToken.
+type TokenRefreshRequest struct {
+	// A unique token that Notion generates to refresh your token, generated when a
+	// user initiates the OAuth flow.
+	RefreshToken string `json:"refresh_token"`
+	// A constant string: "refresh_token".
+	GrantType string `json:"grant_type"`
 }
