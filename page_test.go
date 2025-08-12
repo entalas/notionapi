@@ -482,7 +482,6 @@ func TestPageCreateRequest_MarshallJSON(t *testing.T) {
 									},
 								},
 							},
-							Children: nil,
 						},
 					},
 				},
