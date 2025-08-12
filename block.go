@@ -397,7 +397,6 @@ type ParagraphBlock struct {
 
 type Paragraph struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 	Color    string     `json:"color,omitempty"`
 }
 
@@ -408,7 +407,6 @@ type Heading1Block struct {
 
 type Heading struct {
 	RichText     []RichText `json:"rich_text"`
-	Children     Blocks     `json:"children,omitempty"`
 	Color        string     `json:"color,omitempty"`
 	IsToggleable bool       `json:"is_toggleable,omitempty"`
 }
@@ -431,7 +429,6 @@ type CalloutBlock struct {
 type Callout struct {
 	RichText []RichText `json:"rich_text"`
 	Icon     *Icon      `json:"icon,omitempty"`
-	Children Blocks     `json:"children,omitempty"`
 	Color    string     `json:"color,omitempty"`
 }
 
@@ -442,7 +439,6 @@ type QuoteBlock struct {
 
 type Quote struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 	Color    string     `json:"color,omitempty"`
 }
 
@@ -452,10 +448,9 @@ type TableBlock struct {
 }
 
 type Table struct {
-	TableWidth      int    `json:"table_width"`
-	HasColumnHeader bool   `json:"has_column_header"`
-	HasRowHeader    bool   `json:"has_row_header"`
-	Children        Blocks `json:"children,omitempty"`
+	TableWidth      int  `json:"table_width"`
+	HasColumnHeader bool `json:"has_column_header"`
+	HasRowHeader    bool `json:"has_row_header"`
 }
 
 type TableRowBlock struct {
@@ -474,7 +469,6 @@ type BulletedListItemBlock struct {
 
 type ListItem struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 	Color    string     `json:"color,omitempty"`
 }
 
@@ -490,7 +484,6 @@ type ToDoBlock struct {
 
 type ToDo struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 	Checked  bool       `json:"checked"`
 	Color    string     `json:"color,omitempty"`
 }
@@ -502,7 +495,6 @@ type ToggleBlock struct {
 
 type Toggle struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 	Color    string     `json:"color,omitempty"`
 }
 
@@ -677,7 +669,6 @@ type ColumnBlock struct {
 
 type Column struct {
 	// Children should at least have 1 block when appending.
-	Children Blocks `json:"children"`
 }
 
 type ColumnListBlock struct {
@@ -688,7 +679,6 @@ type ColumnListBlock struct {
 type ColumnList struct {
 	// Children can only contain column blocks
 	// Children should have at least 2 blocks when appending.
-	Children Blocks `json:"children"`
 }
 
 // NOTE: will only be returned by the API. Cannot be created by the API.
@@ -720,7 +710,6 @@ type TemplateBlock struct {
 
 type Template struct {
 	RichText []RichText `json:"rich_text"`
-	Children Blocks     `json:"children,omitempty"`
 }
 
 type SyncedBlock struct {
